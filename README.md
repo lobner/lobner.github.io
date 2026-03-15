@@ -63,7 +63,7 @@ Then navigate to `http://localhost:8080`.
 
 ## Deployment
 
-Pushes to the `main` branch are automatically deployed via **GitHub Pages**.  
+Pushes to the `main` branch trigger the **GitHub Actions** workflow (`.github/workflows/static.yml`), which automatically builds and deploys the site to **GitHub Pages** using the `deploy-pages` action.  
 The custom domain is configured through the `CNAME` file and DNS records pointing to GitHub's Pages servers.
 
 ---
