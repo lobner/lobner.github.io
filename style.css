@@ -632,13 +632,32 @@ img {
   transform: translateY(-2px);
 }
 
+.skill-category-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.skill-category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
 .skill-category h3 {
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-accent);
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .skill-tags {
@@ -659,10 +678,20 @@ img {
   transition: all var(--transition);
 }
 
-.skill-tag:hover {
+.skill-tag:hover,
+.skill-tag--primary {
   border-color: var(--color-accent);
   color: var(--color-accent);
   background: var(--color-accent-light);
+}
+
+.skill-tag--primary {
+  font-weight: 600;
+}
+
+.skill-tag--primary:hover {
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
 /* ===== Contact ===== */
