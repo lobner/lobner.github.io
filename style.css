@@ -615,7 +615,7 @@ img {
 /* ===== Skills ===== */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
 }
 
@@ -860,7 +860,7 @@ img {
   }
 
   .skills-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .contact-content {
@@ -894,5 +894,9 @@ img {
 
   .section {
     padding: 64px 0;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }

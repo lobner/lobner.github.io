@@ -36,8 +36,10 @@ No build toolchain or static-site generator — pure hand-crafted HTML, CSS and 
 | Category | Details |
 |---|---|
 | **Languages** | Ruby, Java, JavaScript, Python, C#, C/C++, PHP |
-| **Backend** | Ruby on Rails, REST APIs, MSSQL, Elasticsearch, Graph Algorithms |
-| **Platforms** | Linux/Unix, macOS, Git, JIRA, Agile |
+| **Frameworks & APIs** | Ruby on Rails, REST APIs, Graph Algorithms, Minitest |
+| **Databases & Search** | MSSQL, PostgreSQL, Elasticsearch |
+| **DevOps & Tools** | Linux/Unix, macOS, Git, Docker |
+| **Methodologies** | Agile, JIRA, Code Review |
 | **Domain** | KYC / AML, Compliance, Business Intelligence, Risk Assessment |
 
 ---
