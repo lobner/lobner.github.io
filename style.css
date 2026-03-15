@@ -639,6 +639,14 @@ img {
   letter-spacing: 0.08em;
   color: var(--color-accent);
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.skill-category h3 svg {
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 .skill-tags {
@@ -659,10 +667,21 @@ img {
   transition: all var(--transition);
 }
 
-.skill-tag:hover {
+.skill-tag:hover,
+.skill-tag--primary {
   border-color: var(--color-accent);
   color: var(--color-accent);
   background: var(--color-accent-light);
+}
+
+.skill-tag--primary {
+  font-weight: 600;
+}
+
+.skill-tag--primary:hover {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
 }
 
 /* ===== Contact ===== */
