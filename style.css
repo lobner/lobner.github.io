@@ -679,6 +679,9 @@ img {
   padding: 32px 24px;
   text-align: center;
   transition: all var(--transition);
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .contact-card:hover {
@@ -705,13 +708,13 @@ img {
   margin-bottom: 8px;
 }
 
-.contact-card a,
+.contact-card span,
 .contact-card p {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
 }
 
-.contact-card a:hover {
+.contact-card:hover span {
   color: var(--color-accent);
 }
 
