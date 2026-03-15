@@ -1,0 +1,31 @@
+# This workflow sets the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 repository variable,
+# which opts all GitHub Actions workflow runs (including Dependabot's internal
+# github/dependabot-action) into Node.js 24 ahead of the June 2026 forced migration.
+#
+# It runs automatically whenever this file is pushed or modified on main, and can
+# also be triggered manually via the Actions tab.
+name: Set up Node.js 24 for GitHub Actions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/setup-nodejs24.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  set-repository-variable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 repository variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh variable set FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 --body "true" --repo "${{ github.repository }}"
+          echo "Repository variable FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true has been set."
+          echo "This ensures all workflow runs, including Dependabot's internal workflow,"
+          echo "use Node.js 24 for JavaScript actions."
