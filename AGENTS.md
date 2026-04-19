@@ -65,9 +65,10 @@ Hosted on **GitHub Pages** with a custom domain (`lobner.dk`).
 
 ## Skills
 
-Reusable skills for common tasks on this site, specified per the [agentskills.io](https://agentskills.io/specifications) format:
+Reusable skills for common tasks on this site, specified per the [agentskills.io](https://agentskills.io/specifications) format.  
+Each skill lives in its own directory under `skills/` and contains a `SKILL.md` file with YAML frontmatter and step-by-step instructions.
 
-| Skill | File | Purpose |
+| Skill | Directory | Purpose |
 |---|---|---|
-| Update Content | [`skills/update-content.md`](skills/update-content.md) | Edit hero, about, and contact copy |
-| Manage Experience | [`skills/manage-experience.md`](skills/manage-experience.md) | Add, edit or remove timeline entries |
+| Update Content | [`skills/update-content/`](skills/update-content/SKILL.md) | Edit hero, about, and contact copy |
+| Manage Experience | [`skills/manage-experience/`](skills/manage-experience/SKILL.md) | Add, edit or remove timeline entries |
