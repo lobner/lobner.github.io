@@ -1,0 +1,7 @@
+name = "ip-lobner-dk"
+main = "src/index.js"
+compatibility_date = "2025-04-01"
+
+routes = [
+  { pattern = "ip.lobner.dk", custom_domain = true }
+]
