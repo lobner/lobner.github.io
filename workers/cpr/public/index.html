@@ -1,0 +1,46 @@
+<!DOCTYPE html5>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script type="text/javascript" src="cpr.js"></script>
+<style type="text/css">
+body {margin:20px;}
+.boy {color:blue;}
+.girl {color:red;}
+.blink {animation: blink 1s steps(5, start) infinite;}
+#good {color:green;font-weight:bold;}
+#bad {color:red;font-weight:bold;}
+#header {margin:auto;padding:0px;min-width:340px;max-width:440px;}
+#content {margin:auto;padding:20px;color:black;background-color:#eee;border:1px dashed black;max-width:400px;min-width:200px}
+#disclaimer {color:gray}
+</style>
+</head>
+<body>
+<h1 id="header">CPR iterator</h1>
+<div id="content">
+<input type="text" placeholder="Fødselsdag (fx. 210981)" name="input" id="inputField" maxlength="10" />
+<span id="amount"></span>
+
+<p id="century">
+<input type="radio" name="century" id="1800" value="1800"/>1800
+<input type="radio" name="century" id="1900" value="1900"/>1900
+<input type="radio" name="century" id="2000" value="2000"/>2000
+<input type="radio" name="century" id="?" value="?" checked="checked"/>alle
+</p>
+
+<p id="gender">
+<input type="radio" name="gender" id="K" value="K"/>♀
+<input type="radio" name="gender" id="M" value="M"/>♂
+<input type="radio" name="gender" id="?" value="?" checked="checked"/>begge
+</p>
+
+<p id="output"></p>
+<hr/>
+<p id="disclaimer">
+Det hele foregår i <a href="cpr.js" title="javascript kildekode">browseren</a>, så
+CPR sendes <i>ikke</i> over nettet.
+</p>
+</div>
+</body>
+</html>
