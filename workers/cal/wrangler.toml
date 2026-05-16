@@ -1,9 +1,9 @@
 name = "cal-lobner-dk"
 compatibility_date = "2025-04-01"
 
-[assets]
-directory = "./public"
-
 routes = [
   { pattern = "cal.lobner.dk", custom_domain = true }
 ]
+
+[assets]
+directory = "./public"
