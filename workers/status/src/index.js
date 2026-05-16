@@ -20,6 +20,30 @@ export default {
       redirect: 'manual',
     });
 
-    return fetch(upstreamRequest);
+    const response = await fetch(upstreamRequest);
+    const contentType = response.headers.get('content-type') || '';
+
+    if (!contentType.includes('text/html')) {
+      return response;
+    }
+
+    // The Upptime/Sapper page is built with baseUrl=/status/. When served from
+    // the root of status.lobner.dk, Sapper's client-side router doesn't match
+    // any route because window.location.pathname is "/" not "/status/". Rewrite
+    // the base href and __SAPPER__.baseUrl so the SPA mounts at the root.
+    const html = await response.text();
+    const rewritten = html
+      .replace('<base href=/status/ >', '<base href=/ >')
+      .replace('__SAPPER__={baseUrl:"/status"', '__SAPPER__={baseUrl:""');
+
+    const headers = new Headers(response.headers);
+    headers.delete('content-encoding');
+    headers.delete('content-length');
+
+    return new Response(rewritten, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   },
 };
