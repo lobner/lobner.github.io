@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Filmsamling — Søren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0b08;
+  --bg-2: #14110c;
+  --surface: #1d1812;
+  --surface-2: #261f17;
+  --text: #ece5d4;
+  --text-dim: #b5a98e;
+  --text-faint: #6d6249;
+  --accent: #d9a441;
+  --accent-2: #b78428;
+  --crimson: #8b3a2f;
+  --border: #2a2419;
+  --shadow: 0 20px 60px -20px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'Geist', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 12% -10%, rgba(217,164,65,0.06), transparent 45%),
+    radial-gradient(ellipse at 90% 110%, rgba(139,58,47,0.05), transparent 55%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--accent); color: var(--bg); }
+
+header {
+  padding: 4rem 2rem 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--accent);
+}
+.tagline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  max-width: 600px;
+}
+.meta-bar {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.meta-bar span strong {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  margin-bottom: 2px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(13,11,8,0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+}
+.toolbar-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.search input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+.search::before {
+  content: "⌕";
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  font-size: 1.1rem;
+}
+select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.75rem 2rem 0.75rem 1rem;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%238a7d65' d='M6 8L2 4h8z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  transition: border-color 0.2s;
+}
+select:hover, select:focus { border-color: var(--accent); outline: none; }
+.count-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.count-pill strong { color: var(--accent); }
+
+main {
+  padding: 2.5rem 2rem 6rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem 1.25rem;
+}
+.card {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1);
+}
+.card:hover { transform: translateY(-4px); }
+.poster {
+  aspect-ratio: 2/3;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.poster img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.poster img.loaded { opacity: 1; }
+.poster-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--surface), var(--bg-2));
+}
+.poster-placeholder .ph-title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--text-dim);
+}
+.poster-placeholder .ph-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-top: 0.5rem;
+  letter-spacing: 0.15em;
+}
+.format-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(13,11,8,0.85);
+  backdrop-filter: blur(4px);
+  color: var(--text);
+  border: 1px solid rgba(236,229,212,0.15);
+  z-index: 2;
+}
+.format-badge.bluray {
+  background: rgba(20,40,80,0.9);
+  border-color: rgba(100,140,200,0.4);
+  color: #c5d8f0;
+}
+.card-body { padding: 0.75rem 0.25rem 0; }
+.card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  margin-top: 0.35rem;
+  letter-spacing: 0.05em;
+}
+.card-meta .dot { margin: 0 0.5rem; color: var(--accent-2); }
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(5,4,2,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.modal-backdrop.open { opacity: 1; pointer-events: all; }
+.modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -48%);
+  width: min(900px, 92vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  z-index: 101;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+}
+.modal.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translate(-50%, -50%);
+}
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(13,11,8,0.8);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: background 0.2s, border-color 0.2s;
+}
+.modal-close:hover { background: var(--crimson); border-color: var(--crimson); }
+.modal-content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+@media (max-width: 640px) {
+  .modal-content { grid-template-columns: 1fr; }
+  .modal-poster { max-width: 200px; margin: 0 auto; }
+}
+.modal-poster {
+  aspect-ratio: 2/3;
+  background: var(--surface);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.modal-poster img { width: 100%; height: 100%; object-fit: cover; }
+.modal-poster .poster-placeholder { padding: 1.5rem; }
+.modal-poster .poster-placeholder .ph-title { font-size: 1.2rem; }
+.modal-info h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-variation-settings: "opsz" 144;
+  margin-bottom: 0.25rem;
+}
+.modal-info h2 .intl {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  display: block;
+  margin-top: 0.25rem;
+  font-weight: 300;
+}
+.modal-meta {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+  flex-wrap: wrap;
+}
+.modal-meta span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.7rem;
+  border-radius: 3px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.modal-meta .year { color: var(--accent); border-color: var(--accent-2); }
+.modal-meta .fmt.bluray { color: #c5d8f0; border-color: rgba(100,140,200,0.4); }
+.modal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.modal-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.modal-links a:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+  transform: translateX(2px);
+}
+.modal-links a .label {
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.modal-links a .icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  width: 36px;
+  text-align: center;
+  padding: 0.3rem 0;
+  background: var(--bg);
+  border-radius: 3px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.modal-links a .arrow { color: var(--text-faint); font-family: 'JetBrains Mono', monospace; }
+.modal-links a:hover .arrow { color: var(--accent); }
+
+.empty {
+  text-align: center;
+  padding: 5rem 1rem;
+  color: var(--text-faint);
+}
+.empty p {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1.2rem;
+}
+
+footer {
+  text-align: center;
+  padding: 3rem 2rem 4rem;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  border-top: 1px solid var(--border);
+}
+
+/* API key banner */
+.api-banner {
+  background: linear-gradient(90deg, rgba(217,164,65,0.08), rgba(139,58,47,0.06));
+  border-bottom: 1px solid var(--accent-2);
+  padding: 1rem 2rem;
+}
+.api-banner.error {
+  background: linear-gradient(90deg, rgba(139,58,47,0.15), rgba(139,58,47,0.05));
+  border-bottom-color: var(--crimson);
+}
+.api-banner-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.api-banner-text {
+  flex: 1;
+  min-width: 240px;
+}
+.api-banner-text strong {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text);
+  display: block;
+}
+.api-banner-text span {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.api-banner input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.6rem 0.85rem;
+  border-radius: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  min-width: 280px;
+  letter-spacing: 0.02em;
+}
+.api-banner input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.api-banner button {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.api-banner button:hover { background: var(--accent-2); }
+.api-banner button:disabled { opacity: 0.5; cursor: wait; }
+.api-banner a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent-dim);
+  padding-bottom: 1px;
+}
+.api-banner a:hover { color: var(--text); border-color: var(--text); }
+
+.key-status {
+  margin-left: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.key-status:hover { border-color: var(--accent); color: var(--text); }
+.key-status .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5db575;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Sørens privatsamling</div>
+  <h1>Filmsamlingen<br><em>på hylden</em></h1>
+  <p class="tagline">Et stilfuldt udsnit af DVD- og Blu-ray-årgange fra Mean Streets (1973) til The Unbelievers (2013).</p>
+  <div class="meta-bar">
+    <span><strong id="stat-total">—</strong>Unikke titler</span>
+    <span><strong id="stat-dvd">—</strong>DVD</span>
+    <span><strong id="stat-bluray">—</strong>Blu-ray</span>
+    <span><strong id="stat-decades">—</strong>Årtier dækket</span>
+  </div>
+</header>
+
+<div class="api-banner" id="api-banner" hidden>
+  <div class="api-banner-inner">
+    <div class="api-banner-text" id="banner-text">
+      <strong>Plakater kræver en gratis TMDB API-nøgle</strong>
+      <span>Opret konto, gå til <em>Settings → API</em>, kopiér "API Key (v3 auth)" og indsæt nedenfor.</span>
+    </div>
+    <input type="text" id="api-key-input" placeholder="32-tegns API-nøgle..." spellcheck="false" autocomplete="off">
+    <button id="save-key">Gem nøgle</button>
+    <a href="https://www.themoviedb.org/signup" target="_blank" rel="noopener">Få gratis nøgle →</a>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="search">
+      <input type="search" id="q" placeholder="Søg på titel..." autocomplete="off">
+    </div>
+    <select id="genre"><option value="">Alle genrer</option></select>
+    <select id="decade"><option value="">Alle årtier</option></select>
+    <select id="format"><option value="">Alle formater</option></select>
+    <select id="sort">
+      <option value="title">Titel A-Å</option>
+      <option value="title-desc">Titel Å-A</option>
+      <option value="year-desc">Nyeste først</option>
+      <option value="year">Ældste først</option>
+    </select>
+    <span class="count-pill"><strong id="visible-count">—</strong> / <span id="total-count">—</span></span>
+    <span class="key-status" id="key-status" hidden><span class="dot"></span>Skift nøgle</span>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden><p>Ingen titler matcher dit filter.</p></div>
+</main>
+
+<div class="modal-backdrop" id="backdrop"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <button class="modal-close" id="close-modal" aria-label="Luk">×</button>
+  <div class="modal-content" id="modal-content"></div>
+</div>
+
+<footer>
+  Bygget af Claude · Plakater fra <a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="color:var(--accent-2);text-decoration:none;border-bottom:1px dotted">TMDB</a> · 193 titler
+</footer>
+
+<script>
+const FILMS = [{"t": "A Beautiful Mind", "y": 2001, "f": "DVD", "g": "Biopic/Drama"}, {"t": "A Cup Of Love", "y": 2007, "f": "DVD", "g": "Romantik"}, {"t": "A Good Year", "y": 2006, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "A Single Man", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Afsløringen", "y": 2007, "f": "DVD", "g": "Drama", "i": "Reservation Road"}, {"t": "Alice I Eventyrland", "y": 2010, "f": "DVD", "g": "Familie/Fantasy", "i": "Alice in Wonderland"}, {"t": "Alpha Dog", "y": 2006, "f": "DVD", "g": "Krimi/Drama"}, {"t": "American Beauty", "y": 1999, "f": "DVD", "g": "Drama"}, {"t": "American Gangster", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "An Education", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Back to the Future: Trilogy", "y": 1985, "f": "DVD", "g": "Sci-Fi/Komedie", "i": "Back to the Future"}, {"t": "Batman Begins", "y": 2005, "f": "DVD", "g": "Superhelt"}, {"t": "Black Swan", "y": 2010, "f": "DVD", "g": "Thriller/Drama"}, {"t": "Blinkende Lygter", "y": 2000, "f": "DVD", "g": "Dansk/Krimi"}, {"t": "Bobby", "y": 2006, "f": "DVD", "g": "Drama"}, {"t": "Boy A", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Breaking the Waves", "y": 1996, "f": "DVD", "g": "Drama"}, {"t": "Brooklyn's Finest", "y": 2009, "f": "Blu-ray", "g": "Krimi"}, {"t": "Captain America: The First Avenger", "y": 2011, "f": "DVD", "g": "Superhelt"}, {"t": "Cassandra's Dream", "y": 2007, "f": "DVD", "g": "Drama/Thriller"}, {"t": "Catch Me If You Can", "y": 2002, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Centurion", "y": 2010, "f": "DVD", "g": "Action/Historisk"}, {"t": "CHE - A Revolutionary Life", "y": 2008, "f": "DVD", "g": "Biopic/Drama", "i": "Che Part One"}, {"t": "Cinderella Man", "y": 2005, "f": "DVD", "g": "Biopic/Sport"}, {"t": "Constantine", "y": 2005, "f": "DVD", "g": "Fantasy/Horror"}, {"t": "Contact", "y": 1997, "f": "DVD", "g": "Sci-Fi"}, {"t": "Corpse Bride", "y": 2005, "f": "DVD", "g": "Animation/Familie"}, {"t": "Cosmos", "y": 1980, "f": "DVD", "g": "Dokumentar", "i": "Cosmos: A Personal Voyage"}, {"t": "Cowboys & Aliens", "y": 2011, "f": "DVD", "g": "Sci-Fi/Western"}, {"t": "Crash", "y": 2004, "f": "DVD", "g": "Drama"}, {"t": "Days of Thunder", "y": 1990, "f": "DVD", "g": "Action"}, {"t": "Dear John", "y": 2010, "f": "DVD", "g": "Romantik"}, {"t": "Dear Wendy", "y": 2004, "f": "DVD", "g": "Drama"}, {"t": "Desperado", "y": 1995, "f": "DVD", "g": "Action"}, {"t": "Dirty Dancing", "y": 1987, "f": "DVD", "g": "Romantik/Musical"}, {"t": "Drageløberen", "y": 2007, "f": "DVD", "g": "Drama", "i": "The Kite Runner"}, {"t": "Døde Poeters Klub", "y": 1989, "f": "DVD", "g": "Drama", "i": "Dead Poets Society"}, {"t": "Eastern Promises", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "Ed Wood", "y": 1994, "f": "DVD", "g": "Biopic/Komedie"}, {"t": "Edward Saksehånd", "y": 1990, "f": "DVD", "g": "Fantasy/Romantik", "i": "Edward Scissorhands"}, {"t": "En Verden Udenfor", "y": 1994, "f": "DVD", "g": "Drama", "i": "Legends of the Fall"}, {"t": "Fear and Loathing in Las Vegas", "y": 1998, "f": "DVD", "g": "Komedie/Drama"}, {"t": "Fidibus", "y": 2006, "f": "DVD", "g": "Dansk/Komedie"}, {"t": "Fight Club", "y": 1999, "f": "DVD", "g": "Drama/Thriller"}, {"t": "Four Brothers", "y": 2005, "f": "DVD", "g": "Action/Krimi"}, {"t": "Fracture", "y": 2007, "f": "DVD", "g": "Thriller"}, {"t": "Født den 4. juli", "y": 1989, "f": "DVD", "g": "Krig/Drama", "i": "Born on the Fourth of July"}, {"t": "Gladiator", "y": 2000, "f": "DVD", "g": "Action/Historisk"}, {"t": "Good Will Hunting", "y": 1997, "f": "DVD", "g": "Drama"}, {"t": "Harry Brown", "y": 2009, "f": "DVD", "g": "Krimi/Thriller"}, {"t": "Harry Potter og Fønixordenen", "y": 2007, "f": "DVD", "g": "Fantasy/Familie", "i": "Harry Potter and the Order of the Phoenix"}, {"t": "Harsh Times", "y": 2005, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Hart's War", "y": 2002, "f": "DVD", "g": "Krig/Drama"}, {"t": "Headhunter", "y": 2009, "f": "DVD", "g": "Thriller"}, {"t": "Heksene fra Warren Manor - Sæson 5", "y": 2002, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Heksene fra Warren Manor - Sæson 6", "y": 2003, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Heksene fra Warren Manor - Sæson 8", "y": 2005, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Helt sikkert... Måske", "y": 2008, "f": "DVD", "g": "Romantik/Komedie", "i": "Definitely Maybe"}, {"t": "Hobbitten: En Uventet Rejse", "y": 2012, "f": "Blu-ray", "g": "Fantasy", "i": "The Hobbit An Unexpected Journey"}, {"t": "Hollywood Cops", "y": 2003, "f": "DVD", "g": "Action/Komedie", "i": "Hollywood Homicide"}, {"t": "Hooligans", "y": 2005, "f": "DVD", "g": "Drama", "i": "Green Street Hooligans"}, {"t": "Hulk", "y": 2003, "f": "DVD", "g": "Superhelt"}, {"t": "I Love You Phillip Morris", "y": 2009, "f": "DVD", "g": "Komedie/Romantik"}, {"t": "I'm Not There", "y": 2007, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Illusionisten", "y": 2006, "f": "DVD", "g": "Drama/Mystery", "i": "The Illusionist"}, {"t": "Inception", "y": 2010, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "Into the Wild", "y": 2007, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Iron Man", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "Iron Man 2", "y": 2010, "f": "DVD", "g": "Superhelt"}, {"t": "It", "y": 1990, "f": "DVD", "g": "Horror", "i": "Stephen King It"}, {"t": "Jolly Roger", "y": 2001, "f": "DVD", "g": "Dansk/Familie"}, {"t": "Just Like Heaven", "y": 2005, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "Kick-Ass", "y": 2010, "f": "DVD", "g": "Action/Superhelt"}, {"t": "Kill Bill: Vol. 2", "y": 2004, "f": "DVD", "g": "Action"}, {"t": "Knocked Up", "y": 2007, "f": "DVD", "g": "Komedie"}, {"t": "Knowing", "y": 2009, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "Kongekabale", "y": 2004, "f": "DVD", "g": "Dansk/Thriller", "i": "King's Game"}, {"t": "Kærlighed ved første hik", "y": 1999, "f": "DVD", "g": "Dansk/Familie"}, {"t": "Last Man Standing", "y": 1996, "f": "DVD", "g": "Action"}, {"t": "Leaving Las Vegas", "y": 1995, "f": "DVD", "g": "Drama"}, {"t": "Letters from Iwo Jima", "y": 2006, "f": "DVD", "g": "Krig"}, {"t": "Lock, Stock & Two Smoking Barrels: Rub & Stub og To Rygende Geværer", "y": 1998, "f": "DVD", "g": "Krimi/Komedie", "i": "Lock Stock and Two Smoking Barrels"}, {"t": "Lord of the Rings. Ringenes Herre: Kongen vender tilbage", "y": 2003, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Return of the King"}, {"t": "Lord Of War", "y": 2005, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Lost in Translation", "y": 2003, "f": "DVD", "g": "Drama"}, {"t": "Lucky Number Slevin", "y": 2006, "f": "DVD", "g": "Krimi/Thriller"}, {"t": "Marvel's The Avengers", "y": 2012, "f": "DVD", "g": "Superhelt", "i": "The Avengers"}, {"t": "Me & Orson Welles", "y": 2008, "f": "DVD", "g": "Drama", "i": "Me and Orson Welles"}, {"t": "Mean Streets", "y": 1973, "f": "DVD", "g": "Krimi"}, {"t": "Miami Vice", "y": 2006, "f": "DVD", "g": "Action/Krimi"}, {"t": "Midnight In Paris", "y": 2011, "f": "DVD", "g": "Komedie/Romantik"}, {"t": "Nat på Museet", "y": 2006, "f": "DVD", "g": "Familie/Komedie", "i": "Night at the Museum"}, {"t": "Natural Born Killers", "y": 1994, "f": "DVD", "g": "Krimi"}, {"t": "Ned Kelly", "y": 2003, "f": "DVD", "g": "Action/Biopic"}, {"t": "Niceville", "y": 2011, "f": "DVD", "g": "Drama", "i": "The Help"}, {"t": "Nine", "y": 2009, "f": "Blu-ray", "g": "Musical/Drama"}, {"t": "Nord Og Syd: Bog Et", "y": 1985, "f": "DVD", "g": "TV-serie/Historisk", "i": "North and South"}, {"t": "Nord Og Syd: Bog To", "y": 1986, "f": "DVD", "g": "TV-serie/Historisk", "i": "North and South"}, {"t": "Nordkraft", "y": 2005, "f": "DVD", "g": "Dansk/Drama"}, {"t": "Nowhere Boy", "y": 2009, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Officer og Gentleman", "y": 1982, "f": "DVD", "g": "Romantik/Drama", "i": "An Officer and a Gentleman"}, {"t": "Old School", "y": 2003, "f": "DVD", "g": "Komedie"}, {"t": "Once Upon A Time In America", "y": 1984, "f": "DVD", "g": "Krimi"}, {"t": "Pirates Of The Caribbean: Den Sorte Forbandelse", "y": 2003, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean The Curse of the Black Pearl"}, {"t": "Pirates of the Caribbean: Død Mands Kiste", "y": 2006, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean Dead Man's Chest"}, {"t": "Pirates of the Caribbean: Ved verdens ende", "y": 2007, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean At World's End"}, {"t": "Precious", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Pride & Prejudice", "y": 2005, "f": "DVD", "g": "Romantik/Drama"}, {"t": "Public Enemies", "y": 2009, "f": "DVD", "g": "Krimi"}, {"t": "Pulp Fiction", "y": 1994, "f": "DVD", "g": "Krimi"}, {"t": "Red State", "y": 2011, "f": "DVD", "g": "Thriller/Horror"}, {"t": "Remember Me", "y": 2010, "f": "DVD", "g": "Romantik/Drama"}, {"t": "Revolutionary Road", "y": 2008, "f": "DVD", "g": "Drama"}, {"t": "Ringenes Herre: De To Tårne", "y": 2002, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Two Towers"}, {"t": "Ringenes Herre: Eventyret Om Ringen", "y": 2001, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Fellowship of the Ring"}, {"t": "Rock N Rolla", "y": 2008, "f": "DVD", "g": "Krimi", "i": "RocknRolla"}, {"t": "Saving Private Ryan", "y": 1998, "f": "DVD", "g": "Krig"}, {"t": "Scarface", "y": 1983, "f": "DVD", "g": "Krimi"}, {"t": "Seabiscuit", "y": 2003, "f": "DVD", "g": "Drama/Sport"}, {"t": "Sex and the City", "y": 2008, "f": "DVD", "g": "Romantik/Komedie", "i": "Sex and the City"}, {"t": "Sex and the City - Sesong 6", "y": 2003, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex And the City - Sæson 1", "y": 1998, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex and the City 2", "y": 2010, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "Sex and the City: Season 2", "y": 1999, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex and the City: Season 4", "y": 2001, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City Season 4"}, {"t": "Sex And The City: Säsong 3", "y": 2000, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex And The City: Säsong 5", "y": 2002, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sherlock Holmes", "y": 2009, "f": "DVD", "g": "Action/Mystery"}, {"t": "Sherlock Holmes: A Game of Shadows", "y": 2011, "f": "DVD", "g": "Action/Mystery"}, {"t": "Shoot 'Em Up", "y": 2007, "f": "DVD", "g": "Action"}, {"t": "Shooter", "y": 2007, "f": "DVD", "g": "Action/Thriller"}, {"t": "Shutter Island", "y": 2009, "f": "DVD", "g": "Thriller"}, {"t": "Sjokolade", "y": 2000, "f": "DVD", "g": "Romantik/Drama", "i": "Chocolat"}, {"t": "Sky Captain and the World of Tomorrow", "y": 2004, "f": "DVD", "g": "Sci-Fi/Eventyr"}, {"t": "Skyfall", "y": 2012, "f": "Blu-ray", "g": "Action/Thriller"}, {"t": "Snatch", "y": 2000, "f": "DVD", "g": "Krimi/Komedie"}, {"t": "Straw Dogs", "y": 1971, "f": "DVD", "g": "Thriller"}, {"t": "Strømer", "y": 1976, "f": "DVD", "g": "Dansk/Krimi"}, {"t": "Sweeney Todd", "y": 2007, "f": "DVD", "g": "Musical/Horror", "i": "Sweeney Todd The Demon Barber of Fleet Street"}, {"t": "Taken", "y": 2008, "f": "DVD", "g": "Action/Thriller"}, {"t": "The Amazing Spider-Man", "y": 2012, "f": "Blu-ray", "g": "Superhelt"}, {"t": "The Assassination of Jesse James by the Coward Robert Ford", "y": 2007, "f": "DVD", "g": "Western/Drama"}, {"t": "The Aviator", "y": 2004, "f": "DVD", "g": "Biopic/Drama"}, {"t": "The Boondock Saints", "y": 1999, "f": "Blu-ray", "g": "Krimi/Action"}, {"t": "The Brothers Grimm", "y": 2005, "f": "DVD", "g": "Fantasy/Eventyr"}, {"t": "The Butterfly Effect", "y": 2004, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "The Dark Knight", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "The Day The Earth Stood Still", "y": 2008, "f": "DVD", "g": "Sci-Fi"}, {"t": "The Departed", "y": 2006, "f": "DVD", "g": "Krimi"}, {"t": "The Holiday", "y": 2006, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "The Incredible Hulk", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "The Informant", "y": 2009, "f": "DVD", "g": "Komedie/Krimi", "i": "The Informant!"}, {"t": "The Insider", "y": 1999, "f": "DVD", "g": "Drama"}, {"t": "The Italian Job", "y": 2003, "f": "DVD", "g": "Action/Krimi"}, {"t": "The Kids are All Right", "y": 2010, "f": "DVD", "g": "Drama/Komedie"}, {"t": "The Last King of Scotland", "y": 2006, "f": "DVD", "g": "Drama/Biopic"}, {"t": "The Machinist", "y": 2004, "f": "DVD", "g": "Thriller"}, {"t": "The Man Who Wasn't There", "y": 2001, "f": "DVD", "g": "Krimi/Drama"}, {"t": "The Matrix Collection", "y": 1999, "f": "DVD", "g": "Sci-Fi/Action", "i": "The Matrix"}, {"t": "The Messenger", "y": 2009, "f": "DVD", "g": "Drama/Krig"}, {"t": "The Notebook", "y": 2004, "f": "DVD", "g": "Romantik"}, {"t": "The Prestige", "y": 2006, "f": "DVD", "g": "Thriller/Drama"}, {"t": "The Social Network", "y": 2010, "f": "DVD", "g": "Biopic/Drama"}, {"t": "The Thin Red Line", "y": 1998, "f": "DVD", "g": "Krig/Drama"}, {"t": "The Truman Show", "y": 1998, "f": "DVD", "g": "Drama/Sci-Fi"}, {"t": "The Twilight Saga: New Moon", "y": 2009, "f": "DVD", "g": "Romantik/Fantasy"}, {"t": "The Unbelievers", "y": 2013, "f": "DVD", "g": "Dokumentar"}, {"t": "The Walking Dead: Hele Første Sæson", "y": 2010, "f": "DVD", "g": "TV-serie/Horror", "i": "The Walking Dead"}, {"t": "The Whole Nine Yards", "y": 2000, "f": "DVD", "g": "Komedie/Krimi"}, {"t": "The X Files: I Want To Believe", "y": 2008, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "There Will Be Blood", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Things We Lost in the Fire", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Thor", "y": 2011, "f": "DVD", "g": "Superhelt"}, {"t": "Tilbage Til Cold Mountain", "y": 2003, "f": "DVD", "g": "Drama/Krig", "i": "Cold Mountain"}, {"t": "Top Gun", "y": 1986, "f": "DVD", "g": "Action"}, {"t": "Traffic", "y": 2000, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Trainspotting", "y": 1996, "f": "DVD", "g": "Drama"}, {"t": "Tron Legacy", "y": 2010, "f": "DVD", "g": "Sci-Fi/Action"}, {"t": "Twilight", "y": 2008, "f": "DVD", "g": "Romantik/Fantasy"}, {"t": "Twilight: Eclipse", "y": 2010, "f": "DVD", "g": "Romantik/Fantasy", "i": "The Twilight Saga Eclipse"}, {"t": "Underworld trilogy box", "y": 2009, "f": "DVD", "g": "Action/Horror", "i": "Underworld"}, {"t": "Up In The Air", "y": 2009, "f": "DVD", "g": "Drama/Komedie"}, {"t": "Van Helsing", "y": 2004, "f": "DVD", "g": "Action/Horror"}, {"t": "Vanilla Sky", "y": 2001, "f": "DVD", "g": "Sci-Fi/Drama"}, {"t": "Vantage point", "y": 2008, "f": "DVD", "g": "Thriller", "i": "Vantage Point"}, {"t": "Ved floden", "y": 1992, "f": "DVD", "g": "Drama", "i": "A River Runs Through It"}, {"t": "Vejen til Perdition", "y": 2002, "f": "DVD", "g": "Krimi/Drama", "i": "Road to Perdition"}, {"t": "Walk the Line", "y": 2005, "f": "DVD", "g": "Biopic/Drama"}, {"t": "We Own the Night", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "Winter's Bone", "y": 2010, "f": "DVD", "g": "Drama"}, {"t": "Wonders Of The Solar System", "y": 2010, "f": "DVD", "g": "Dokumentar"}, {"t": "Wonders of the Universe", "y": 2011, "f": "DVD", "g": "Dokumentar"}, {"t": "X Files - The Complete Series", "y": 1993, "f": "DVD", "g": "TV-serie/Sci-Fi", "i": "The X-Files"}];
+
+// Cache TMDB-resultater (i memory + localStorage hvor muligt)
+// v3: TMDB-data inkl. poster_path, id, type
+const posterCache = new Map();
+const CACHE_KEY = 'posterCache_v3_tmdb';
+const TMDB_KEY_STORAGE = 'tmdbApiKey';
+try {
+  const stored = localStorage.getItem(CACHE_KEY);
+  if (stored) {
+    Object.entries(JSON.parse(stored)).forEach(([k, v]) => posterCache.set(k, v));
+  }
+  // Ryd gamle cache-versioner
+  localStorage.removeItem('posterCache');
+  localStorage.removeItem('posterCache_v2');
+} catch(e) {}
+
+function savePosterCache() {
+  try {
+    const obj = Object.fromEntries(posterCache);
+    localStorage.setItem(CACHE_KEY, JSON.stringify(obj));
+  } catch(e) {}
+}
+
+function getApiKey() {
+  return localStorage.getItem(TMDB_KEY_STORAGE) || '';
+}
+
+function setApiKey(k) {
+  if (k) localStorage.setItem(TMDB_KEY_STORAGE, k);
+  else localStorage.removeItem(TMDB_KEY_STORAGE);
+}
+
+function key(f) { return (f.i || f.t) + '|' + f.y; }
+
+// Henter plakat fra TMDB.
+// Bruger /search/movie eller /search/tv afhængig af genre, falder tilbage til /search/multi.
+async function fetchPoster(f) {
+  const k = key(f);
+  if (posterCache.has(k)) return posterCache.get(k);
+
+  const apiKey = getApiKey();
+  if (!apiKey) return null;
+
+  const term = f.i || f.t;
+  const isTv = f.g.startsWith('TV-serie');
+  const enc = encodeURIComponent(term);
+
+  // Prioriteret rækkefølge: præcis endpoint med år -> uden år -> multi-search
+  const attempts = [];
+  if (isTv) {
+    attempts.push({ url: `https://api.themoviedb.org/3/search/tv?query=${enc}&first_air_date_year=${f.y}&api_key=${apiKey}`, type: 'tv' });
+    attempts.push({ url: `https://api.themoviedb.org/3/search/tv?query=${enc}&api_key=${apiKey}`, type: 'tv' });
+  } else {
+    attempts.push({ url: `https://api.themoviedb.org/3/search/movie?query=${enc}&year=${f.y}&api_key=${apiKey}`, type: 'movie' });
+    attempts.push({ url: `https://api.themoviedb.org/3/search/movie?query=${enc}&api_key=${apiKey}`, type: 'movie' });
+  }
+  attempts.push({ url: `https://api.themoviedb.org/3/search/multi?query=${enc}&api_key=${apiKey}`, type: null });
+
+  for (const { url, type } of attempts) {
+    try {
+      const r = await fetch(url);
+      if (r.status === 401) {
+        // Ugyldig nøgle - signaler det opadtil
+        showApiBanner('http', { status: 401, message: 'Invalid API key' });
+        return null;
+      }
+      if (!r.ok) continue;
+      const data = await r.json();
+      if (!data.results || !data.results.length) continue;
+      // Find første resultat med plakat
+      const candidate = data.results.find(x => x.poster_path);
+      if (!candidate) continue;
+      const mediaType = type || candidate.media_type || 'movie';
+      const result = {
+        img: `https://image.tmdb.org/t/p/w500${candidate.poster_path}`,
+        tmdbId: candidate.id,
+        tmdbType: mediaType,
+        title: candidate.title || candidate.name || term,
+      };
+      posterCache.set(k, result);
+      savePosterCache();
+      return result;
+    } catch(e) {
+      console.warn('TMDB fejl for', term, e);
+    }
+  }
+  posterCache.set(k, null);
+  savePosterCache();
+  return null;
+}
+
+// Test om en nøgle er gyldig. Returnerer detaljeret status så vi kan fejlfinde.
+async function testApiKey(k) {
+  try {
+    const r = await fetch(`https://api.themoviedb.org/3/search/movie?query=inception&api_key=${k}`);
+    if (r.ok) return { ok: true };
+    let body = null;
+    try { body = await r.json(); } catch(e) {}
+    return { ok: false, reason: 'http', status: r.status, message: body && body.status_message };
+  } catch(e) {
+    return { ok: false, reason: 'network', message: e.message };
+  }
+}
+
+function makePlaceholder(f) {
+  return `<div class="poster-placeholder"><div class="ph-title">${escapeHtml(f.t)}</div><div class="ph-year">${f.y}</div></div>`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
+
+function decade(y) { return Math.floor(y/10)*10; }
+function mainGenre(g) { return g.split('/')[0]; }
+
+// Build filter options
+function buildFilters() {
+  const genres = [...new Set(FILMS.map(f => mainGenre(f.g)))].sort();
+  const decades = [...new Set(FILMS.map(f => decade(f.y)))].sort();
+  const formats = [...new Set(FILMS.map(f => f.f))].sort();
+  const gSel = document.getElementById('genre');
+  genres.forEach(g => gSel.insertAdjacentHTML('beforeend', `<option value="${g}">${g}</option>`));
+  const dSel = document.getElementById('decade');
+  decades.forEach(d => dSel.insertAdjacentHTML('beforeend', `<option value="${d}">${d}'erne</option>`));
+  const fSel = document.getElementById('format');
+  formats.forEach(fmt => fSel.insertAdjacentHTML('beforeend', `<option value="${fmt}">${fmt}</option>`));
+}
+
+// Render
+function render() {
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  const gFilter = document.getElementById('genre').value;
+  const dFilter = document.getElementById('decade').value;
+  const fFilter = document.getElementById('format').value;
+  const sort = document.getElementById('sort').value;
+
+  let filtered = FILMS.filter(f => {
+    if (q && !f.t.toLowerCase().includes(q) && !(f.i && f.i.toLowerCase().includes(q))) return false;
+    if (gFilter && mainGenre(f.g) !== gFilter) return false;
+    if (dFilter && decade(f.y) !== +dFilter) return false;
+    if (fFilter && f.f !== fFilter) return false;
+    return true;
+  });
+
+  const sorters = {
+    'title': (a,b) => a.t.localeCompare(b.t, 'da'),
+    'title-desc': (a,b) => b.t.localeCompare(a.t, 'da'),
+    'year-desc': (a,b) => b.y - a.y || a.t.localeCompare(b.t),
+    'year': (a,b) => a.y - b.y || a.t.localeCompare(b.t),
+  };
+  filtered.sort(sorters[sort]);
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  document.getElementById('visible-count').textContent = filtered.length;
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.hidden = false;
+    return;
+  }
+  empty.hidden = true;
+
+  grid.innerHTML = filtered.map((f, idx) => `
+    <button class="card" data-idx="${FILMS.indexOf(f)}">
+      <div class="poster" data-poster-key="${key(f)}">
+        <span class="format-badge${f.f === 'Blu-ray' ? ' bluray' : ''}">${f.f === 'Blu-ray' ? 'BD' : 'DVD'}</span>
+        ${makePlaceholder(f)}
+      </div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(f.t)}</div>
+        <div class="card-meta">${f.y}<span class="dot">·</span>${escapeHtml(f.g)}</div>
+      </div>
+    </button>
+  `).join('');
+
+  // Wire up clicks
+  grid.querySelectorAll('.card').forEach(c => {
+    c.addEventListener('click', () => openModal(FILMS[+c.dataset.idx]));
+  });
+
+  // Lazy load posters via IntersectionObserver
+  observePosters();
+}
+
+let observer;
+function observePosters() {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(async entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      observer.unobserve(el);
+      const idx = +el.closest('.card').dataset.idx;
+      const film = FILMS[idx];
+      const result = await fetchPoster(film);
+      if (result && result.img) {
+        const img = new Image();
+        img.alt = film.t;
+        img.onload = () => {
+          el.querySelector('.poster-placeholder')?.remove();
+          img.classList.add('loaded');
+        };
+        img.onerror = () => { img.remove(); };
+        el.appendChild(img);
+        img.src = result.img;
+        requestAnimationFrame(() => img.classList.add('loaded'));
+      }
+    });
+  }, { rootMargin: '200px' });
+  document.querySelectorAll('.poster').forEach(p => observer.observe(p));
+}
+
+// Modal
+async function openModal(f) {
+  const content = document.getElementById('modal-content');
+  const imdbQ = encodeURIComponent((f.i || f.t) + ' ' + f.y);
+  const wikiQ = encodeURIComponent((f.i || f.t) + ' film ' + f.y);
+  const googleQ = encodeURIComponent((f.i || f.t) + ' ' + f.y + ' film');
+  // Tjek om vi har cached TMDB-data
+  const cached = posterCache.get(key(f));
+  const tmdbHref = cached && cached.tmdbId
+    ? `https://www.themoviedb.org/${cached.tmdbType}/${cached.tmdbId}`
+    : `https://www.themoviedb.org/search?query=${encodeURIComponent(f.i || f.t)}`;
+  content.innerHTML = `
+    <div class="modal-poster" id="modal-poster">
+      ${makePlaceholder(f)}
+    </div>
+    <div class="modal-info">
+      <h2>${escapeHtml(f.t)}${f.i ? `<span class="intl">${escapeHtml(f.i)}</span>` : ''}</h2>
+      <div class="modal-meta">
+        <span class="year">${f.y}</span>
+        <span class="fmt${f.f === 'Blu-ray' ? ' bluray' : ''}">${f.f}</span>
+        <span>${escapeHtml(f.g)}</span>
+        <span>${decade(f.y)}'erne</span>
+      </div>
+      <div class="modal-links">
+        <a href="https://www.imdb.com/find/?q=${imdbQ}&s=tt&ttype=ft" target="_blank" rel="noopener">
+          <span class="label"><span class="icon">IMDB</span>Find på IMDB</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="${tmdbHref}" target="_blank" rel="noopener" id="tmdb-link">
+          <span class="label"><span class="icon">TMDB</span>${cached && cached.tmdbId ? 'TMDB-side' : 'Søg på TMDB'}</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://en.wikipedia.org/wiki/Special:Search?search=${wikiQ}" target="_blank" rel="noopener">
+          <span class="label"><span class="icon">WIKI</span>Søg på Wikipedia</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://www.google.com/search?q=${googleQ}" target="_blank" rel="noopener">
+          <span class="label"><span class="icon">SØG</span>Google-søgning</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://letterboxd.com/search/films/${encodeURIComponent((f.i || f.t))}/" target="_blank" rel="noopener">
+          <span class="label"><span class="icon">LB</span>Find på Letterboxd</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Hent poster og opdater TMDB-link når vi kender ID
+  const result = await fetchPoster(f);
+  if (result && result.img) {
+    const mp = document.getElementById('modal-poster');
+    if (mp) {
+      const img = new Image();
+      img.src = result.img;
+      img.alt = f.t;
+      img.onload = () => {
+        mp.querySelector('.poster-placeholder')?.remove();
+        mp.appendChild(img);
+      };
+    }
+    // Opdater TMDB-linket med den præcise side
+    if (result.tmdbId) {
+      const tmdbLink = document.getElementById('tmdb-link');
+      if (tmdbLink) {
+        tmdbLink.href = `https://www.themoviedb.org/${result.tmdbType}/${result.tmdbId}`;
+        tmdbLink.querySelector('.label').innerHTML = '<span class="icon">TMDB</span>TMDB-side';
+      }
+    }
+  }
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('close-modal').addEventListener('click', closeModal);
+document.getElementById('backdrop').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Stats
+document.getElementById('stat-total').textContent = FILMS.length;
+document.getElementById('stat-dvd').textContent = FILMS.filter(f => f.f === 'DVD').length;
+document.getElementById('stat-bluray').textContent = FILMS.filter(f => f.f === 'Blu-ray').length;
+document.getElementById('stat-decades').textContent = new Set(FILMS.map(f => decade(f.y))).size;
+document.getElementById('total-count').textContent = FILMS.length;
+
+buildFilters();
+['q','genre','decade','format','sort'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+  document.getElementById(id).addEventListener('change', render);
+});
+
+// === API-nøgle UI ===
+const banner = document.getElementById('api-banner');
+const bannerText = document.getElementById('banner-text');
+const keyInput = document.getElementById('api-key-input');
+const saveBtn = document.getElementById('save-key');
+const keyStatus = document.getElementById('key-status');
+
+function showApiBanner(state, info) {
+  banner.hidden = false;
+  banner.classList.toggle('error', state !== 'initial');
+  if (state === 'initial') {
+    bannerText.innerHTML = '<strong>Plakater kræver en gratis TMDB API-nøgle</strong><span>Opret konto, gå til <em>Settings → API</em>, kopiér "API Key (v3 auth)" og indsæt nedenfor.</span>';
+  } else if (state === 'http') {
+    const msg = info && info.message ? ` - "${escapeHtml(info.message)}"` : '';
+    const help = info && info.status === 401
+      ? 'Nye nøgler kan tage 5-30 min at aktivere efter tilmelding. Tjek også at det er "API Key (v3 auth)", ikke "Read Access Token".'
+      : 'Uventet HTTP-status.';
+    bannerText.innerHTML = `<strong>TMDB svarede HTTP ${info.status}${msg}</strong><span>${help}</span>`;
+  } else if (state === 'network') {
+    const msg = info && info.message ? escapeHtml(info.message) : 'ukendt';
+    bannerText.innerHTML = `<strong>Kunne ikke nå TMDB (netværks- eller CORS-fejl)</strong><span>Fejl: ${msg}. Åbn DevTools (F12) → Console for detaljer. Hvis du åbner filen via <code>file://</code>, prøv at servere den fra localhost i stedet (se konsollen for kommando).</span>`;
+    console.warn('=== TMDB connection failed ===');
+    console.warn('Hvis du åbner denne fil via file://, kan din browser blokere fetch til api.themoviedb.org.');
+    console.warn('Løsning: server filen fra localhost. Naviger til mappen i terminal og kør:');
+    console.warn('  python3 -m http.server 8000');
+    console.warn('Åbn så http://localhost:8000/filmsamling.html');
+  }
+  keyStatus.hidden = true;
+}
+
+function hideApiBanner() {
+  banner.hidden = true;
+  keyStatus.hidden = false;
+}
+
+async function handleSave() {
+  const k = keyInput.value.trim();
+  if (!k) return;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Tester...';
+  const result = await testApiKey(k);
+  if (result.ok) {
+    setApiKey(k);
+    hideApiBanner();
+    // Ryd cache så vi henter med ny nøgle
+    posterCache.clear();
+    savePosterCache();
+    render(); // re-render for at re-observe posters
+  } else {
+    showApiBanner(result.reason, result);
+    keyInput.focus();
+  }
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Gem nøgle';
+}
+
+saveBtn.addEventListener('click', handleSave);
+keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSave(); });
+keyStatus.addEventListener('click', () => {
+  keyInput.value = getApiKey();
+  showApiBanner('initial');
+});
+
+// Vis banner hvis ingen nøgle er gemt
+if (!getApiKey()) {
+  showApiBanner('initial');
+} else {
+  keyStatus.hidden = false;
+}
+
+render();
+</script>
+</body>
+</html>
