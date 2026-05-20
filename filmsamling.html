@@ -326,14 +326,42 @@ main {
 }
 .modal-close:hover { background: var(--crimson); border-color: var(--crimson); }
 .modal-content {
+  /* container — backdrop + grid sidder indeni */
+}
+.modal-backdrop-image {
+  position: relative;
+  height: 160px;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--surface), var(--bg-2));
+  display: none;
+}
+.modal.has-backdrop .modal-backdrop-image { display: block; }
+.modal-backdrop-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.modal-backdrop-image img.loaded { opacity: 0.55; }
+.modal-backdrop-image::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(20,17,12,0.7) 70%, var(--bg-2) 100%);
+  pointer-events: none;
+}
+.modal-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 2rem;
   padding: 2rem;
 }
+.modal.has-backdrop .modal-grid { padding-top: 1.5rem; }
 @media (max-width: 640px) {
-  .modal-content { grid-template-columns: 1fr; }
+  .modal-grid { grid-template-columns: 1fr; }
   .modal-poster { max-width: 200px; margin: 0 auto; }
+  .modal-backdrop-image { height: 110px; }
 }
 .modal-poster {
   aspect-ratio: 2/3;
@@ -382,6 +410,73 @@ main {
 }
 .modal-meta .year { color: var(--accent); border-color: var(--accent-2); }
 .modal-meta .fmt.bluray { color: #c5d8f0; border-color: rgba(100,140,200,0.4); }
+.modal-meta .rating {
+  color: var(--accent);
+  border-color: var(--accent-2);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.modal-meta .runtime { color: var(--text); }
+.modal-meta [hidden] { display: none; }
+
+.modal-tagline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--accent);
+  margin: 0.5rem 0 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.modal-tagline.loaded { opacity: 1; }
+
+.modal-section {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.modal-section h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.85rem;
+}
+.modal-overview {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.modal-crew {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.85rem;
+}
+.modal-crew strong {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin-right: 0.75rem;
+}
+.modal-cast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.modal-cast .cast-name + .cast-name::before {
+  content: "·";
+  color: var(--accent-2);
+  margin: 0 0.6rem;
+}
+.modal-links { margin-top: 1.75rem; }
 .modal-links {
   display: flex;
   flex-direction: column;
@@ -603,9 +698,12 @@ footer {
 const FILMS = [{"t": "A Beautiful Mind", "y": 2001, "f": "DVD", "g": "Biopic/Drama"}, {"t": "A Cup Of Love", "y": 2007, "f": "DVD", "g": "Romantik"}, {"t": "A Good Year", "y": 2006, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "A Single Man", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Afsløringen", "y": 2007, "f": "DVD", "g": "Drama", "i": "Reservation Road"}, {"t": "Alice I Eventyrland", "y": 2010, "f": "DVD", "g": "Familie/Fantasy", "i": "Alice in Wonderland"}, {"t": "Alpha Dog", "y": 2006, "f": "DVD", "g": "Krimi/Drama"}, {"t": "American Beauty", "y": 1999, "f": "DVD", "g": "Drama"}, {"t": "American Gangster", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "An Education", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Back to the Future: Trilogy", "y": 1985, "f": "DVD", "g": "Sci-Fi/Komedie", "i": "Back to the Future"}, {"t": "Batman Begins", "y": 2005, "f": "DVD", "g": "Superhelt"}, {"t": "Black Swan", "y": 2010, "f": "DVD", "g": "Thriller/Drama"}, {"t": "Blinkende Lygter", "y": 2000, "f": "DVD", "g": "Dansk/Krimi"}, {"t": "Bobby", "y": 2006, "f": "DVD", "g": "Drama"}, {"t": "Boy A", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Breaking the Waves", "y": 1996, "f": "DVD", "g": "Drama"}, {"t": "Brooklyn's Finest", "y": 2009, "f": "Blu-ray", "g": "Krimi"}, {"t": "Captain America: The First Avenger", "y": 2011, "f": "DVD", "g": "Superhelt"}, {"t": "Cassandra's Dream", "y": 2007, "f": "DVD", "g": "Drama/Thriller"}, {"t": "Catch Me If You Can", "y": 2002, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Centurion", "y": 2010, "f": "DVD", "g": "Action/Historisk"}, {"t": "CHE - A Revolutionary Life", "y": 2008, "f": "DVD", "g": "Biopic/Drama", "i": "Che Part One"}, {"t": "Cinderella Man", "y": 2005, "f": "DVD", "g": "Biopic/Sport"}, {"t": "Constantine", "y": 2005, "f": "DVD", "g": "Fantasy/Horror"}, {"t": "Contact", "y": 1997, "f": "DVD", "g": "Sci-Fi"}, {"t": "Corpse Bride", "y": 2005, "f": "DVD", "g": "Animation/Familie"}, {"t": "Cosmos", "y": 1980, "f": "DVD", "g": "Dokumentar", "i": "Cosmos: A Personal Voyage"}, {"t": "Cowboys & Aliens", "y": 2011, "f": "DVD", "g": "Sci-Fi/Western"}, {"t": "Crash", "y": 2004, "f": "DVD", "g": "Drama"}, {"t": "Days of Thunder", "y": 1990, "f": "DVD", "g": "Action"}, {"t": "Dear John", "y": 2010, "f": "DVD", "g": "Romantik"}, {"t": "Dear Wendy", "y": 2004, "f": "DVD", "g": "Drama"}, {"t": "Desperado", "y": 1995, "f": "DVD", "g": "Action"}, {"t": "Dirty Dancing", "y": 1987, "f": "DVD", "g": "Romantik/Musical"}, {"t": "Drageløberen", "y": 2007, "f": "DVD", "g": "Drama", "i": "The Kite Runner"}, {"t": "Døde Poeters Klub", "y": 1989, "f": "DVD", "g": "Drama", "i": "Dead Poets Society"}, {"t": "Eastern Promises", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "Ed Wood", "y": 1994, "f": "DVD", "g": "Biopic/Komedie"}, {"t": "Edward Saksehånd", "y": 1990, "f": "DVD", "g": "Fantasy/Romantik", "i": "Edward Scissorhands"}, {"t": "En Verden Udenfor", "y": 1994, "f": "DVD", "g": "Drama", "i": "Legends of the Fall"}, {"t": "Fear and Loathing in Las Vegas", "y": 1998, "f": "DVD", "g": "Komedie/Drama"}, {"t": "Fidibus", "y": 2006, "f": "DVD", "g": "Dansk/Komedie"}, {"t": "Fight Club", "y": 1999, "f": "DVD", "g": "Drama/Thriller"}, {"t": "Four Brothers", "y": 2005, "f": "DVD", "g": "Action/Krimi"}, {"t": "Fracture", "y": 2007, "f": "DVD", "g": "Thriller"}, {"t": "Født den 4. juli", "y": 1989, "f": "DVD", "g": "Krig/Drama", "i": "Born on the Fourth of July"}, {"t": "Gladiator", "y": 2000, "f": "DVD", "g": "Action/Historisk"}, {"t": "Good Will Hunting", "y": 1997, "f": "DVD", "g": "Drama"}, {"t": "Harry Brown", "y": 2009, "f": "DVD", "g": "Krimi/Thriller"}, {"t": "Harry Potter og Fønixordenen", "y": 2007, "f": "DVD", "g": "Fantasy/Familie", "i": "Harry Potter and the Order of the Phoenix"}, {"t": "Harsh Times", "y": 2005, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Hart's War", "y": 2002, "f": "DVD", "g": "Krig/Drama"}, {"t": "Headhunter", "y": 2009, "f": "DVD", "g": "Thriller"}, {"t": "Heksene fra Warren Manor - Sæson 5", "y": 2002, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Heksene fra Warren Manor - Sæson 6", "y": 2003, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Heksene fra Warren Manor - Sæson 8", "y": 2005, "f": "DVD", "g": "TV-serie/Fantasy", "i": "Charmed"}, {"t": "Helt sikkert... Måske", "y": 2008, "f": "DVD", "g": "Romantik/Komedie", "i": "Definitely Maybe"}, {"t": "Hobbitten: En Uventet Rejse", "y": 2012, "f": "Blu-ray", "g": "Fantasy", "i": "The Hobbit An Unexpected Journey"}, {"t": "Hollywood Cops", "y": 2003, "f": "DVD", "g": "Action/Komedie", "i": "Hollywood Homicide"}, {"t": "Hooligans", "y": 2005, "f": "DVD", "g": "Drama", "i": "Green Street Hooligans"}, {"t": "Hulk", "y": 2003, "f": "DVD", "g": "Superhelt"}, {"t": "I Love You Phillip Morris", "y": 2009, "f": "DVD", "g": "Komedie/Romantik"}, {"t": "I'm Not There", "y": 2007, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Illusionisten", "y": 2006, "f": "DVD", "g": "Drama/Mystery", "i": "The Illusionist"}, {"t": "Inception", "y": 2010, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "Into the Wild", "y": 2007, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Iron Man", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "Iron Man 2", "y": 2010, "f": "DVD", "g": "Superhelt"}, {"t": "It", "y": 1990, "f": "DVD", "g": "Horror", "i": "Stephen King It"}, {"t": "Jolly Roger", "y": 2001, "f": "DVD", "g": "Dansk/Familie"}, {"t": "Just Like Heaven", "y": 2005, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "Kick-Ass", "y": 2010, "f": "DVD", "g": "Action/Superhelt"}, {"t": "Kill Bill: Vol. 2", "y": 2004, "f": "DVD", "g": "Action"}, {"t": "Knocked Up", "y": 2007, "f": "DVD", "g": "Komedie"}, {"t": "Knowing", "y": 2009, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "Kongekabale", "y": 2004, "f": "DVD", "g": "Dansk/Thriller", "i": "King's Game"}, {"t": "Kærlighed ved første hik", "y": 1999, "f": "DVD", "g": "Dansk/Familie"}, {"t": "Last Man Standing", "y": 1996, "f": "DVD", "g": "Action"}, {"t": "Leaving Las Vegas", "y": 1995, "f": "DVD", "g": "Drama"}, {"t": "Letters from Iwo Jima", "y": 2006, "f": "DVD", "g": "Krig"}, {"t": "Lock, Stock & Two Smoking Barrels: Rub & Stub og To Rygende Geværer", "y": 1998, "f": "DVD", "g": "Krimi/Komedie", "i": "Lock Stock and Two Smoking Barrels"}, {"t": "Lord of the Rings. Ringenes Herre: Kongen vender tilbage", "y": 2003, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Return of the King"}, {"t": "Lord Of War", "y": 2005, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Lost in Translation", "y": 2003, "f": "DVD", "g": "Drama"}, {"t": "Lucky Number Slevin", "y": 2006, "f": "DVD", "g": "Krimi/Thriller"}, {"t": "Marvel's The Avengers", "y": 2012, "f": "DVD", "g": "Superhelt", "i": "The Avengers"}, {"t": "Me & Orson Welles", "y": 2008, "f": "DVD", "g": "Drama", "i": "Me and Orson Welles"}, {"t": "Mean Streets", "y": 1973, "f": "DVD", "g": "Krimi"}, {"t": "Miami Vice", "y": 2006, "f": "DVD", "g": "Action/Krimi"}, {"t": "Midnight In Paris", "y": 2011, "f": "DVD", "g": "Komedie/Romantik"}, {"t": "Nat på Museet", "y": 2006, "f": "DVD", "g": "Familie/Komedie", "i": "Night at the Museum"}, {"t": "Natural Born Killers", "y": 1994, "f": "DVD", "g": "Krimi"}, {"t": "Ned Kelly", "y": 2003, "f": "DVD", "g": "Action/Biopic"}, {"t": "Niceville", "y": 2011, "f": "DVD", "g": "Drama", "i": "The Help"}, {"t": "Nine", "y": 2009, "f": "Blu-ray", "g": "Musical/Drama"}, {"t": "Nord Og Syd: Bog Et", "y": 1985, "f": "DVD", "g": "TV-serie/Historisk", "i": "North and South"}, {"t": "Nord Og Syd: Bog To", "y": 1986, "f": "DVD", "g": "TV-serie/Historisk", "i": "North and South"}, {"t": "Nordkraft", "y": 2005, "f": "DVD", "g": "Dansk/Drama"}, {"t": "Nowhere Boy", "y": 2009, "f": "DVD", "g": "Biopic/Drama"}, {"t": "Officer og Gentleman", "y": 1982, "f": "DVD", "g": "Romantik/Drama", "i": "An Officer and a Gentleman"}, {"t": "Old School", "y": 2003, "f": "DVD", "g": "Komedie"}, {"t": "Once Upon A Time In America", "y": 1984, "f": "DVD", "g": "Krimi"}, {"t": "Pirates Of The Caribbean: Den Sorte Forbandelse", "y": 2003, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean The Curse of the Black Pearl"}, {"t": "Pirates of the Caribbean: Død Mands Kiste", "y": 2006, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean Dead Man's Chest"}, {"t": "Pirates of the Caribbean: Ved verdens ende", "y": 2007, "f": "DVD", "g": "Action/Eventyr", "i": "Pirates of the Caribbean At World's End"}, {"t": "Precious", "y": 2009, "f": "DVD", "g": "Drama"}, {"t": "Pride & Prejudice", "y": 2005, "f": "DVD", "g": "Romantik/Drama"}, {"t": "Public Enemies", "y": 2009, "f": "DVD", "g": "Krimi"}, {"t": "Pulp Fiction", "y": 1994, "f": "DVD", "g": "Krimi"}, {"t": "Red State", "y": 2011, "f": "DVD", "g": "Thriller/Horror"}, {"t": "Remember Me", "y": 2010, "f": "DVD", "g": "Romantik/Drama"}, {"t": "Revolutionary Road", "y": 2008, "f": "DVD", "g": "Drama"}, {"t": "Ringenes Herre: De To Tårne", "y": 2002, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Two Towers"}, {"t": "Ringenes Herre: Eventyret Om Ringen", "y": 2001, "f": "DVD", "g": "Fantasy", "i": "The Lord of the Rings The Fellowship of the Ring"}, {"t": "Rock N Rolla", "y": 2008, "f": "DVD", "g": "Krimi", "i": "RocknRolla"}, {"t": "Saving Private Ryan", "y": 1998, "f": "DVD", "g": "Krig"}, {"t": "Scarface", "y": 1983, "f": "DVD", "g": "Krimi"}, {"t": "Seabiscuit", "y": 2003, "f": "DVD", "g": "Drama/Sport"}, {"t": "Sex and the City", "y": 2008, "f": "DVD", "g": "Romantik/Komedie", "i": "Sex and the City"}, {"t": "Sex and the City - Sesong 6", "y": 2003, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex And the City - Sæson 1", "y": 1998, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex and the City 2", "y": 2010, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "Sex and the City: Season 2", "y": 1999, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex and the City: Season 4", "y": 2001, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City Season 4"}, {"t": "Sex And The City: Säsong 3", "y": 2000, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sex And The City: Säsong 5", "y": 2002, "f": "DVD", "g": "TV-serie/Romantik", "i": "Sex and the City"}, {"t": "Sherlock Holmes", "y": 2009, "f": "DVD", "g": "Action/Mystery"}, {"t": "Sherlock Holmes: A Game of Shadows", "y": 2011, "f": "DVD", "g": "Action/Mystery"}, {"t": "Shoot 'Em Up", "y": 2007, "f": "DVD", "g": "Action"}, {"t": "Shooter", "y": 2007, "f": "DVD", "g": "Action/Thriller"}, {"t": "Shutter Island", "y": 2009, "f": "DVD", "g": "Thriller"}, {"t": "Sjokolade", "y": 2000, "f": "DVD", "g": "Romantik/Drama", "i": "Chocolat"}, {"t": "Sky Captain and the World of Tomorrow", "y": 2004, "f": "DVD", "g": "Sci-Fi/Eventyr"}, {"t": "Skyfall", "y": 2012, "f": "Blu-ray", "g": "Action/Thriller"}, {"t": "Snatch", "y": 2000, "f": "DVD", "g": "Krimi/Komedie"}, {"t": "Straw Dogs", "y": 1971, "f": "DVD", "g": "Thriller"}, {"t": "Strømer", "y": 1976, "f": "DVD", "g": "Dansk/Krimi"}, {"t": "Sweeney Todd", "y": 2007, "f": "DVD", "g": "Musical/Horror", "i": "Sweeney Todd The Demon Barber of Fleet Street"}, {"t": "Taken", "y": 2008, "f": "DVD", "g": "Action/Thriller"}, {"t": "The Amazing Spider-Man", "y": 2012, "f": "Blu-ray", "g": "Superhelt"}, {"t": "The Assassination of Jesse James by the Coward Robert Ford", "y": 2007, "f": "DVD", "g": "Western/Drama"}, {"t": "The Aviator", "y": 2004, "f": "DVD", "g": "Biopic/Drama"}, {"t": "The Boondock Saints", "y": 1999, "f": "Blu-ray", "g": "Krimi/Action"}, {"t": "The Brothers Grimm", "y": 2005, "f": "DVD", "g": "Fantasy/Eventyr"}, {"t": "The Butterfly Effect", "y": 2004, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "The Dark Knight", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "The Day The Earth Stood Still", "y": 2008, "f": "DVD", "g": "Sci-Fi"}, {"t": "The Departed", "y": 2006, "f": "DVD", "g": "Krimi"}, {"t": "The Holiday", "y": 2006, "f": "DVD", "g": "Romantik/Komedie"}, {"t": "The Incredible Hulk", "y": 2008, "f": "DVD", "g": "Superhelt"}, {"t": "The Informant", "y": 2009, "f": "DVD", "g": "Komedie/Krimi", "i": "The Informant!"}, {"t": "The Insider", "y": 1999, "f": "DVD", "g": "Drama"}, {"t": "The Italian Job", "y": 2003, "f": "DVD", "g": "Action/Krimi"}, {"t": "The Kids are All Right", "y": 2010, "f": "DVD", "g": "Drama/Komedie"}, {"t": "The Last King of Scotland", "y": 2006, "f": "DVD", "g": "Drama/Biopic"}, {"t": "The Machinist", "y": 2004, "f": "DVD", "g": "Thriller"}, {"t": "The Man Who Wasn't There", "y": 2001, "f": "DVD", "g": "Krimi/Drama"}, {"t": "The Matrix Collection", "y": 1999, "f": "DVD", "g": "Sci-Fi/Action", "i": "The Matrix"}, {"t": "The Messenger", "y": 2009, "f": "DVD", "g": "Drama/Krig"}, {"t": "The Notebook", "y": 2004, "f": "DVD", "g": "Romantik"}, {"t": "The Prestige", "y": 2006, "f": "DVD", "g": "Thriller/Drama"}, {"t": "The Social Network", "y": 2010, "f": "DVD", "g": "Biopic/Drama"}, {"t": "The Thin Red Line", "y": 1998, "f": "DVD", "g": "Krig/Drama"}, {"t": "The Truman Show", "y": 1998, "f": "DVD", "g": "Drama/Sci-Fi"}, {"t": "The Twilight Saga: New Moon", "y": 2009, "f": "DVD", "g": "Romantik/Fantasy"}, {"t": "The Unbelievers", "y": 2013, "f": "DVD", "g": "Dokumentar"}, {"t": "The Walking Dead: Hele Første Sæson", "y": 2010, "f": "DVD", "g": "TV-serie/Horror", "i": "The Walking Dead"}, {"t": "The Whole Nine Yards", "y": 2000, "f": "DVD", "g": "Komedie/Krimi"}, {"t": "The X Files: I Want To Believe", "y": 2008, "f": "DVD", "g": "Sci-Fi/Thriller"}, {"t": "There Will Be Blood", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Things We Lost in the Fire", "y": 2007, "f": "DVD", "g": "Drama"}, {"t": "Thor", "y": 2011, "f": "DVD", "g": "Superhelt"}, {"t": "Tilbage Til Cold Mountain", "y": 2003, "f": "DVD", "g": "Drama/Krig", "i": "Cold Mountain"}, {"t": "Top Gun", "y": 1986, "f": "DVD", "g": "Action"}, {"t": "Traffic", "y": 2000, "f": "DVD", "g": "Krimi/Drama"}, {"t": "Trainspotting", "y": 1996, "f": "DVD", "g": "Drama"}, {"t": "Tron Legacy", "y": 2010, "f": "DVD", "g": "Sci-Fi/Action"}, {"t": "Twilight", "y": 2008, "f": "DVD", "g": "Romantik/Fantasy"}, {"t": "Twilight: Eclipse", "y": 2010, "f": "DVD", "g": "Romantik/Fantasy", "i": "The Twilight Saga Eclipse"}, {"t": "Underworld trilogy box", "y": 2009, "f": "DVD", "g": "Action/Horror", "i": "Underworld"}, {"t": "Up In The Air", "y": 2009, "f": "DVD", "g": "Drama/Komedie"}, {"t": "Van Helsing", "y": 2004, "f": "DVD", "g": "Action/Horror"}, {"t": "Vanilla Sky", "y": 2001, "f": "DVD", "g": "Sci-Fi/Drama"}, {"t": "Vantage point", "y": 2008, "f": "DVD", "g": "Thriller", "i": "Vantage Point"}, {"t": "Ved floden", "y": 1992, "f": "DVD", "g": "Drama", "i": "A River Runs Through It"}, {"t": "Vejen til Perdition", "y": 2002, "f": "DVD", "g": "Krimi/Drama", "i": "Road to Perdition"}, {"t": "Walk the Line", "y": 2005, "f": "DVD", "g": "Biopic/Drama"}, {"t": "We Own the Night", "y": 2007, "f": "DVD", "g": "Krimi"}, {"t": "Winter's Bone", "y": 2010, "f": "DVD", "g": "Drama"}, {"t": "Wonders Of The Solar System", "y": 2010, "f": "DVD", "g": "Dokumentar"}, {"t": "Wonders of the Universe", "y": 2011, "f": "DVD", "g": "Dokumentar"}, {"t": "X Files - The Complete Series", "y": 1993, "f": "DVD", "g": "TV-serie/Sci-Fi", "i": "The X-Files"}];
 
 // Cache TMDB-resultater (i memory + localStorage hvor muligt)
-// v3: TMDB-data inkl. poster_path, id, type
+// v4: udvidet search-data (overview, backdrop, rating, releasedato osv.)
+// detail v1: /movie eller /tv detail-call med credits + external_ids
 const posterCache = new Map();
-const CACHE_KEY = 'posterCache_v3_tmdb';
+const detailCache = new Map();
+const CACHE_KEY = 'posterCache_v4_tmdb';
+const DETAIL_CACHE_KEY = 'detailCache_v1_tmdb';
 const TMDB_KEY_STORAGE = 'tmdbApiKey';
 try {
   const stored = localStorage.getItem(CACHE_KEY);
@@ -615,12 +713,26 @@ try {
   // Ryd gamle cache-versioner
   localStorage.removeItem('posterCache');
   localStorage.removeItem('posterCache_v2');
+  localStorage.removeItem('posterCache_v3_tmdb');
+} catch(e) {}
+try {
+  const stored = localStorage.getItem(DETAIL_CACHE_KEY);
+  if (stored) {
+    Object.entries(JSON.parse(stored)).forEach(([k, v]) => detailCache.set(k, v));
+  }
 } catch(e) {}
 
 function savePosterCache() {
   try {
     const obj = Object.fromEntries(posterCache);
     localStorage.setItem(CACHE_KEY, JSON.stringify(obj));
+  } catch(e) {}
+}
+
+function saveDetailCache() {
+  try {
+    const obj = Object.fromEntries(detailCache);
+    localStorage.setItem(DETAIL_CACHE_KEY, JSON.stringify(obj));
   } catch(e) {}
 }
 
@@ -635,9 +747,9 @@ function setApiKey(k) {
 
 function key(f) { return (f.i || f.t) + '|' + f.y; }
 
-// Henter plakat fra TMDB.
+// Henter search-data fra TMDB.
 // Bruger /search/movie eller /search/tv afhængig af genre, falder tilbage til /search/multi.
-async function fetchPoster(f) {
+async function fetchTmdbSearch(f) {
   const k = key(f);
   if (posterCache.has(k)) return posterCache.get(k);
 
@@ -676,9 +788,16 @@ async function fetchPoster(f) {
       const mediaType = type || candidate.media_type || 'movie';
       const result = {
         img: `https://image.tmdb.org/t/p/w500${candidate.poster_path}`,
+        backdrop: candidate.backdrop_path ? `https://image.tmdb.org/t/p/w780${candidate.backdrop_path}` : null,
         tmdbId: candidate.id,
         tmdbType: mediaType,
         title: candidate.title || candidate.name || term,
+        originalTitle: candidate.original_title || candidate.original_name || null,
+        overview: candidate.overview || '',
+        voteAverage: typeof candidate.vote_average === 'number' ? candidate.vote_average : null,
+        voteCount: candidate.vote_count || 0,
+        releaseDate: candidate.release_date || candidate.first_air_date || null,
+        originalLanguage: candidate.original_language || null,
       };
       posterCache.set(k, result);
       savePosterCache();
@@ -690,6 +809,56 @@ async function fetchPoster(f) {
   posterCache.set(k, null);
   savePosterCache();
   return null;
+}
+
+// Henter detail-data (runtime, tagline, credits, imdb_id) for et kendt TMDB-id.
+// Kaldes først ved modal-åbning, ikke ved grid-load.
+async function fetchTmdbDetail(tmdbId, tmdbType) {
+  const k = `${tmdbType}|${tmdbId}`;
+  if (detailCache.has(k)) return detailCache.get(k);
+
+  const apiKey = getApiKey();
+  if (!apiKey) return null;
+
+  try {
+    const url = `https://api.themoviedb.org/3/${tmdbType}/${tmdbId}?api_key=${apiKey}&append_to_response=credits,external_ids`;
+    const r = await fetch(url);
+    if (!r.ok) {
+      detailCache.set(k, null);
+      saveDetailCache();
+      return null;
+    }
+    const data = await r.json();
+    const isMovie = tmdbType === 'movie';
+    const credits = data.credits || {};
+    const cast = (credits.cast || []).slice(0, 6).map(c => ({
+      name: c.name,
+      character: c.character || null,
+    }));
+    const directors = isMovie
+      ? (credits.crew || []).filter(c => c.job === 'Director').map(c => c.name)
+      : (data.created_by || []).map(c => c.name);
+    const ext = data.external_ids || {};
+    const result = {
+      runtime: data.runtime || null,
+      episodeRuntime: !isMovie && data.episode_run_time && data.episode_run_time[0] || null,
+      numberOfSeasons: data.number_of_seasons || null,
+      numberOfEpisodes: data.number_of_episodes || null,
+      tagline: data.tagline || null,
+      genres: (data.genres || []).map(g => g.name),
+      imdbId: ext.imdb_id || data.imdb_id || null,
+      cast,
+      directors,
+      productionCountries: (data.production_countries || []).map(c => c.iso_3166_1),
+      status: data.status || null,
+    };
+    detailCache.set(k, result);
+    saveDetailCache();
+    return result;
+  } catch(e) {
+    console.warn('TMDB detail-fejl', tmdbId, e);
+    return null;
+  }
 }
 
 // Test om en nøgle er gyldig. Returnerer detaljeret status så vi kan fejlfinde.
@@ -795,7 +964,7 @@ function observePosters() {
       observer.unobserve(el);
       const idx = +el.closest('.card').dataset.idx;
       const film = FILMS[idx];
-      const result = await fetchPoster(film);
+      const result = await fetchTmdbSearch(film);
       if (result && result.img) {
         const img = new Image();
         img.alt = film.t;
@@ -816,74 +985,196 @@ function observePosters() {
 // Modal
 async function openModal(f) {
   const content = document.getElementById('modal-content');
-  const imdbQ = encodeURIComponent((f.i || f.t) + ' ' + f.y);
+  const imdbSearchQ = encodeURIComponent((f.i || f.t) + ' ' + f.y);
   const wikiQ = encodeURIComponent((f.i || f.t) + ' film ' + f.y);
   const googleQ = encodeURIComponent((f.i || f.t) + ' ' + f.y + ' film');
-  // Tjek om vi har cached TMDB-data
-  const cached = posterCache.get(key(f));
-  const tmdbHref = cached && cached.tmdbId
-    ? `https://www.themoviedb.org/${cached.tmdbType}/${cached.tmdbId}`
-    : `https://www.themoviedb.org/search?query=${encodeURIComponent(f.i || f.t)}`;
+  const tmdbSearchHref = `https://www.themoviedb.org/search?query=${encodeURIComponent(f.i || f.t)}`;
+
+  // Render basis-skelet straks
   content.innerHTML = `
-    <div class="modal-poster" id="modal-poster">
-      ${makePlaceholder(f)}
-    </div>
-    <div class="modal-info">
-      <h2>${escapeHtml(f.t)}${f.i ? `<span class="intl">${escapeHtml(f.i)}</span>` : ''}</h2>
-      <div class="modal-meta">
-        <span class="year">${f.y}</span>
-        <span class="fmt${f.f === 'Blu-ray' ? ' bluray' : ''}">${f.f}</span>
-        <span>${escapeHtml(f.g)}</span>
-        <span>${decade(f.y)}'erne</span>
+    <div class="modal-backdrop-image" id="modal-backdrop"></div>
+    <div class="modal-grid">
+      <div class="modal-poster" id="modal-poster">
+        ${makePlaceholder(f)}
       </div>
-      <div class="modal-links">
-        <a href="https://www.imdb.com/find/?q=${imdbQ}&s=tt&ttype=ft" target="_blank" rel="noopener">
-          <span class="label"><span class="icon">IMDB</span>Find på IMDB</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="${tmdbHref}" target="_blank" rel="noopener" id="tmdb-link">
-          <span class="label"><span class="icon">TMDB</span>${cached && cached.tmdbId ? 'TMDB-side' : 'Søg på TMDB'}</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://en.wikipedia.org/wiki/Special:Search?search=${wikiQ}" target="_blank" rel="noopener">
-          <span class="label"><span class="icon">WIKI</span>Søg på Wikipedia</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://www.google.com/search?q=${googleQ}" target="_blank" rel="noopener">
-          <span class="label"><span class="icon">SØG</span>Google-søgning</span>
-          <span class="arrow">→</span>
-        </a>
-        <a href="https://letterboxd.com/search/films/${encodeURIComponent((f.i || f.t))}/" target="_blank" rel="noopener">
-          <span class="label"><span class="icon">LB</span>Find på Letterboxd</span>
-          <span class="arrow">→</span>
-        </a>
+      <div class="modal-info">
+        <h2>${escapeHtml(f.t)}${f.i ? `<span class="intl">${escapeHtml(f.i)}</span>` : ''}</h2>
+        <div class="modal-tagline" id="modal-tagline"></div>
+        <div class="modal-meta" id="modal-meta">
+          <span class="year">${f.y}</span>
+          <span class="fmt${f.f === 'Blu-ray' ? ' bluray' : ''}">${f.f}</span>
+          <span class="runtime" data-slot="runtime" hidden></span>
+          <span class="rating" data-slot="rating" hidden></span>
+          <span>${escapeHtml(f.g)}</span>
+          <span>${decade(f.y)}'erne</span>
+        </div>
+        <div class="modal-section" id="modal-overview-section" hidden>
+          <h3>Handling</h3>
+          <p class="modal-overview" data-slot="overview"></p>
+        </div>
+        <div class="modal-section" id="modal-credits-section" hidden>
+          <h3>Medvirkende</h3>
+          <div class="modal-crew" data-slot="directors" hidden></div>
+          <div class="modal-cast" data-slot="cast"></div>
+        </div>
+        <div class="modal-links">
+          <a href="https://www.imdb.com/find/?q=${imdbSearchQ}&s=tt&ttype=ft" target="_blank" rel="noopener" id="imdb-link">
+            <span class="label"><span class="icon">IMDB</span>Find på IMDB</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="${tmdbSearchHref}" target="_blank" rel="noopener" id="tmdb-link">
+            <span class="label"><span class="icon">TMDB</span>Søg på TMDB</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="https://en.wikipedia.org/wiki/Special:Search?search=${wikiQ}" target="_blank" rel="noopener">
+            <span class="label"><span class="icon">WIKI</span>Søg på Wikipedia</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="https://www.google.com/search?q=${googleQ}" target="_blank" rel="noopener">
+            <span class="label"><span class="icon">SØG</span>Google-søgning</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="https://letterboxd.com/search/films/${encodeURIComponent((f.i || f.t))}/" target="_blank" rel="noopener">
+            <span class="label"><span class="icon">LB</span>Find på Letterboxd</span>
+            <span class="arrow">→</span>
+          </a>
+        </div>
       </div>
     </div>
   `;
   document.getElementById('modal').classList.add('open');
+  document.getElementById('modal').classList.remove('has-backdrop');
   document.getElementById('backdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // Hent poster og opdater TMDB-link når vi kender ID
-  const result = await fetchPoster(f);
-  if (result && result.img) {
+  // Anvend cached data straks hvis det findes
+  const cachedSearch = posterCache.get(key(f));
+  if (cachedSearch) applySearchData(cachedSearch, f);
+  let cachedDetail = null;
+  if (cachedSearch && cachedSearch.tmdbId) {
+    cachedDetail = detailCache.get(`${cachedSearch.tmdbType}|${cachedSearch.tmdbId}`);
+    if (cachedDetail) applyDetailData(cachedDetail);
+  }
+
+  // Hent friske data hvis ikke cached
+  let search = cachedSearch;
+  if (search === undefined) {
+    search = await fetchTmdbSearch(f);
+    if (search) applySearchData(search, f);
+  }
+  if (search && search.tmdbId && !cachedDetail && !detailCache.has(`${search.tmdbType}|${search.tmdbId}`)) {
+    const detail = await fetchTmdbDetail(search.tmdbId, search.tmdbType);
+    if (detail) applyDetailData(detail);
+  }
+}
+
+function applySearchData(s, f) {
+  if (!s) return;
+  // Poster
+  if (s.img) {
     const mp = document.getElementById('modal-poster');
-    if (mp) {
+    if (mp && !mp.querySelector('img')) {
       const img = new Image();
-      img.src = result.img;
       img.alt = f.t;
       img.onload = () => {
         mp.querySelector('.poster-placeholder')?.remove();
         mp.appendChild(img);
       };
+      img.src = s.img;
     }
-    // Opdater TMDB-linket med den præcise side
-    if (result.tmdbId) {
-      const tmdbLink = document.getElementById('tmdb-link');
-      if (tmdbLink) {
-        tmdbLink.href = `https://www.themoviedb.org/${result.tmdbType}/${result.tmdbId}`;
-        tmdbLink.querySelector('.label').innerHTML = '<span class="icon">TMDB</span>TMDB-side';
-      }
+  }
+  // Backdrop
+  if (s.backdrop) {
+    const bd = document.getElementById('modal-backdrop');
+    if (bd && !bd.querySelector('img')) {
+      const img = new Image();
+      img.alt = '';
+      img.onload = () => {
+        bd.appendChild(img);
+        requestAnimationFrame(() => img.classList.add('loaded'));
+      };
+      img.src = s.backdrop;
+      document.getElementById('modal').classList.add('has-backdrop');
+    }
+  }
+  // Overview / plot
+  if (s.overview) {
+    const ov = document.querySelector('[data-slot="overview"]');
+    if (ov) {
+      ov.textContent = s.overview;
+      document.getElementById('modal-overview-section').hidden = false;
+    }
+  }
+  // Rating (skjul hvis for få stemmer)
+  if (typeof s.voteAverage === 'number' && s.voteAverage > 0 && s.voteCount >= 5) {
+    const r = document.querySelector('[data-slot="rating"]');
+    if (r) {
+      r.textContent = `★ ${s.voteAverage.toFixed(1)}`;
+      r.hidden = false;
+      r.title = `${s.voteCount.toLocaleString('da-DK')} stemmer på TMDB`;
+    }
+  }
+  // TMDB direkte link
+  if (s.tmdbId) {
+    const link = document.getElementById('tmdb-link');
+    if (link) {
+      link.href = `https://www.themoviedb.org/${s.tmdbType}/${s.tmdbId}`;
+      link.querySelector('.label').innerHTML = '<span class="icon">TMDB</span>TMDB-side';
+    }
+  }
+}
+
+function applyDetailData(d) {
+  if (!d) return;
+  // Runtime (film) eller sæson/afsnit-info (TV)
+  const runtimeSlot = document.querySelector('[data-slot="runtime"]');
+  if (runtimeSlot) {
+    if (d.runtime) {
+      const h = Math.floor(d.runtime / 60);
+      const m = d.runtime % 60;
+      runtimeSlot.textContent = h > 0 ? `${h}t ${m}m` : `${m} min`;
+      runtimeSlot.hidden = false;
+    } else if (d.numberOfSeasons || d.numberOfEpisodes) {
+      const parts = [];
+      if (d.numberOfSeasons) parts.push(`${d.numberOfSeasons} sæson${d.numberOfSeasons === 1 ? '' : 'er'}`);
+      if (d.numberOfEpisodes) parts.push(`${d.numberOfEpisodes} afsnit`);
+      runtimeSlot.textContent = parts.join(' · ');
+      runtimeSlot.hidden = false;
+    }
+  }
+  // Tagline
+  if (d.tagline) {
+    const tl = document.getElementById('modal-tagline');
+    if (tl) {
+      tl.textContent = `"${d.tagline}"`;
+      tl.classList.add('loaded');
+    }
+  }
+  // Instruktør/skaber
+  const credSection = document.getElementById('modal-credits-section');
+  if (d.directors && d.directors.length) {
+    const slot = document.querySelector('[data-slot="directors"]');
+    if (slot) {
+      const label = d.directors.length > 1 ? 'Instruktører' : 'Instruktør';
+      slot.innerHTML = `<strong>${label}</strong>${escapeHtml(d.directors.join(', '))}`;
+      slot.hidden = false;
+      if (credSection) credSection.hidden = false;
+    }
+  }
+  // Cast
+  if (d.cast && d.cast.length) {
+    const slot = document.querySelector('[data-slot="cast"]');
+    if (slot) {
+      slot.innerHTML = d.cast.map(c => `<span class="cast-name">${escapeHtml(c.name)}</span>`).join('');
+      if (credSection) credSection.hidden = false;
+    }
+  }
+  // Direkte IMDB-link
+  if (d.imdbId) {
+    const link = document.getElementById('imdb-link');
+    if (link) {
+      link.href = `https://www.imdb.com/title/${d.imdbId}/`;
+      link.querySelector('.label').innerHTML = '<span class="icon">IMDB</span>IMDB-side';
     }
   }
 }
