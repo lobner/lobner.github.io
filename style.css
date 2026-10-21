@@ -184,6 +184,8 @@ img {
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition);
+  margin-left: auto;
+  margin-right: 32px;
 }
 
 .theme-toggle:hover {
@@ -784,6 +786,10 @@ img {
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
+  }
+
+  .theme-toggle {
+    margin-right: 12px;
   }
 
   .nav-links {
