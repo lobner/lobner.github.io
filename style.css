@@ -718,6 +718,21 @@ img {
   color: var(--color-accent);
 }
 
+/* Ring that appears after the "Get in Touch" button scrolls here */
+.contact-card.highlight {
+  outline: 2px solid transparent;
+  animation: contact-ring 2.5s ease-out;
+}
+
+.contact-card.highlight:nth-child(2) { animation-delay: 0.12s; }
+.contact-card.highlight:nth-child(3) { animation-delay: 0.24s; }
+
+@keyframes contact-ring {
+  0% { outline-color: transparent; outline-offset: 14px; }
+  20%, 70% { outline-color: var(--color-accent); outline-offset: 4px; }
+  100% { outline-color: transparent; outline-offset: 4px; }
+}
+
 /* ===== Footer ===== */
 .footer {
   background: var(--color-text);
