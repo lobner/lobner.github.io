@@ -89,3 +89,45 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+
+// Highlight the contact cards after "Get in Touch" scrolls to them
+const getInTouch = document.querySelector('#hero a[href="#contact"]');
+const contactCards = document.querySelectorAll('.contact-card');
+
+// Calls callback when scrollY has not changed for a few frames
+function onScrollSettled(callback) {
+  let lastY = window.scrollY;
+  let stableFrames = 0;
+  function check() {
+    if (window.scrollY === lastY) {
+      stableFrames++;
+    } else {
+      stableFrames = 0;
+      lastY = window.scrollY;
+    }
+    if (stableFrames >= 6) {
+      callback();
+    } else {
+      requestAnimationFrame(check);
+    }
+  }
+  requestAnimationFrame(check);
+}
+
+function highlightContactCards() {
+  contactCards.forEach(card => {
+    card.classList.remove('highlight');
+    void card.offsetWidth; // restart the animation on repeat clicks
+    card.classList.add('highlight');
+  });
+}
+
+contactCards.forEach(card => {
+  card.addEventListener('animationend', (e) => {
+    if (e.animationName === 'contact-ring') card.classList.remove('highlight');
+  });
+});
+
+if (getInTouch) {
+  getInTouch.addEventListener('click', () => onScrollSettled(highlightContactCards));
+}
