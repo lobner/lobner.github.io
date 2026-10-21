@@ -1,14 +1,38 @@
-// Dark mode toggle
+// Theme toggle: cycles light -> dark -> system
 const themeToggle = document.getElementById('themeToggle');
-const savedTheme = localStorage.getItem('theme') ||
-  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-document.documentElement.setAttribute('data-theme', savedTheme);
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+const themeOrder = ['light', 'dark', 'system'];
+const themeLabels = { light: 'Light', dark: 'Dark', system: 'System' };
+const stored = localStorage.getItem('theme');
+let themePref = stored === 'light' || stored === 'dark' ? stored : 'system';
+
+function nextThemePref(pref) {
+  return themeOrder[(themeOrder.indexOf(pref) + 1) % themeOrder.length];
+}
+
+function applyTheme(pref) {
+  const resolved = pref === 'system' ? (darkQuery.matches ? 'dark' : 'light') : pref;
+  document.documentElement.setAttribute('data-theme', resolved);
+  document.documentElement.setAttribute('data-theme-pref', pref);
+  const label = `Theme: ${themeLabels[pref]} (click for ${themeLabels[nextThemePref(pref)]})`;
+  themeToggle.setAttribute('aria-label', label);
+  themeToggle.setAttribute('title', label);
+}
+
+applyTheme(themePref);
 
 themeToggle.addEventListener('click', () => {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  themePref = nextThemePref(themePref);
+  if (themePref === 'system') {
+    localStorage.removeItem('theme');
+  } else {
+    localStorage.setItem('theme', themePref);
+  }
+  applyTheme(themePref);
+});
+
+darkQuery.addEventListener('change', () => {
+  if (themePref === 'system') applyTheme(themePref);
 });
 
 // Navbar scroll effect
