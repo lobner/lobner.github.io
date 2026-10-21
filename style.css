@@ -612,6 +612,72 @@ img {
   line-height: 1.7;
 }
 
+/* Expandable details on a timeline entry */
+.timeline-more {
+  margin-top: 12px;
+}
+
+.timeline-more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.timeline-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.timeline-more summary svg {
+  transition: transform var(--transition);
+}
+
+.timeline-more[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.timeline-more-collapse,
+.timeline-more[open] .timeline-more-expand {
+  display: none;
+}
+
+.timeline-more[open] .timeline-more-collapse {
+  display: inline;
+}
+
+.timeline-details {
+  margin-top: 12px;
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.timeline-details li + li {
+  margin-top: 8px;
+}
+
+/* Animate the open and close where the browser supports it */
+@supports (interpolate-size: allow-keywords) {
+  .timeline-more {
+    interpolate-size: allow-keywords;
+  }
+
+  .timeline-more::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size var(--transition), content-visibility var(--transition) allow-discrete;
+  }
+
+  .timeline-more[open]::details-content {
+    block-size: auto;
+  }
+}
+
 /* ===== Skills ===== */
 .skills-grid {
   display: grid;

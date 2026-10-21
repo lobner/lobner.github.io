@@ -38,6 +38,24 @@ Items are displayed in reverse-chronological order (most recent first).
 | Job title | `h3` | Plain text, no HTML formatting |
 | Company & location | `p.timeline-company` | Format: `Company &mdash; City / City` |
 | Description | `p.timeline-desc` | 1–3 sentences summarising the role |
+| Details (optional) | `details.timeline-more` | Expandable list of more points from the CV, placed after `p.timeline-desc` |
+
+### Optional expandable details
+
+An entry can show more points from the CV behind an "Expand" toggle. Copy the block from the `2014 &ndash; Present` entry in `index.html` and replace the `<li>` items:
+
+```html
+<details class="timeline-more">
+  <summary>
+    <span class="timeline-more-label timeline-more-expand">Expand</span>
+    <span class="timeline-more-label timeline-more-collapse">Collapse</span>
+    <svg …chevron-down…></svg>
+  </summary>
+  <ul class="timeline-details">
+    <li>One point from the CV.</li>
+  </ul>
+</details>
+```
 
 ---
 
