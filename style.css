@@ -184,6 +184,8 @@ img {
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition);
+  margin-left: auto;
+  margin-right: 32px;
 }
 
 .theme-toggle:hover {
@@ -191,11 +193,12 @@ img {
   border-color: var(--color-accent);
 }
 
-.icon-sun { display: none; }
-.icon-moon { display: block; }
+/* Show the icon for the current theme preference */
+.theme-toggle svg { display: none; }
 
-[data-theme="dark"] .icon-sun { display: block; }
-[data-theme="dark"] .icon-moon { display: none; }
+[data-theme-pref="light"] .icon-sun,
+[data-theme-pref="dark"] .icon-moon,
+[data-theme-pref="system"] .icon-system { display: block; }
 
 .nav-toggle {
   display: none;
@@ -783,6 +786,10 @@ img {
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
+  }
+
+  .theme-toggle {
+    margin-right: 12px;
   }
 
   .nav-links {
